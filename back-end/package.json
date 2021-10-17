@@ -4,6 +4,7 @@
   "description": "Back end for the photo repository app.",
   "main": "app.js",
   "scripts": {
+    "start": "node src/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
