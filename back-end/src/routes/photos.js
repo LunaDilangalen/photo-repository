@@ -3,6 +3,10 @@ const express = require('express');
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    res.send('');
+});
+
 router.post('/', (request, response) => {
     response.send('Creating new Photo!')
 });

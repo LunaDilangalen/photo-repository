@@ -10,6 +10,8 @@ const Photo = mongoose.model('Photo', {
 });
 
 module.exports = function (msg) {
+    console.log(msg);
+    
     const img1 = new Photo({
         source: 'dummy_url',
         tags: ['seed', 'data'],
@@ -30,6 +32,4 @@ module.exports = function (msg) {
         dateModified: 'tomorrow'
     })
     img3.save().then(() => console.log('Photo saved!'));
-
-    console.log(msg);
 };
