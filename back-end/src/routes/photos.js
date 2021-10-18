@@ -8,11 +8,12 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (request, response) => {
-    response.send('Creating new Photo!')
+    console.log(request.body)
+    response.send(request.body)
 });
 
 router.patch('/', (request, response) => {
-    response.send('Patching Photo...')
+    response.send(request.body)
 });
 
 module.exports = router;

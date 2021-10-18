@@ -1,5 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+// Define Express App
 const App = express();
 
 // Import routes
@@ -11,6 +14,9 @@ const port = process.env.port || 3001;
 // Configuring database connection
 const mongoURI = process.env.DB_LINK;
 const seed_db = require('./util/seed-db');
+
+// JSON parser
+App.use(express.json());
 
 // Using routes
 App.use('/photos', photosRoute);
