@@ -2,11 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const App = express();
 
-const port = 3001;
-const mongoURI = process.env.DB_LINK;
-
-const seed_db = require('./util/seed-db');
+// Import routes
 const photosRoute = require('./routes/photos');
+
+// Configuring port
+const port = process.env.port || 3001;
+
+// Configuring database connection
+const mongoURI = process.env.DB_LINK;
+const seed_db = require('./util/seed-db');
+
+// Using routes
+App.use('/photos', photosRoute);
 
 async function main() {
     await mongoose.connect(mongoURI);
@@ -17,8 +24,6 @@ async function main() {
 
     // Comment out if no need to seed.
     seed_db('Seeding database.');
-
-    App.use('/photos', photosRoute);
 
     App.get('/', (req, res) => {
         res.send('Welcome to the Photo Repository Service API. :)');

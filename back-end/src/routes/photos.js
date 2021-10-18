@@ -6,4 +6,8 @@ router.get('/', (req, res) => {
     res.send('');
 });
 
-module.exports = router
+router.post('/', (request, response) => {
+    response.send('We are on photos!')
+});
+
+module.exports = router;

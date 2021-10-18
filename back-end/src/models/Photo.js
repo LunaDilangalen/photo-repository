@@ -5,5 +5,14 @@ const PhotoSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    
+    tags: {
+        type: Array,
+        required: true
+    },
+    dateModified: {
+        type: Date,
+        required:true
+    }
 });
+
+module.exports = mongoose.model('Photo', PhotoSchema);
