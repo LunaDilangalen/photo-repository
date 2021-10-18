@@ -41,8 +41,9 @@ services:
         published: 27017
     networks:
       - server-side
-    volumes:
-      - db_container:/data/db
+    # REMOVE COMMENT IF DATA SHOULD BE PERSISTED
+    # volumes:
+      # - db_container:/data/db
 
 networks:
   server-side:

@@ -3,33 +3,33 @@ const mongoURI = process.env.DB_LINK
 
 mongoose.connect(mongoURI);
 
-const Image = mongoose.model('Image', {
+const Photo = mongoose.model('Photo', {
     source: String,
     tags: Array,
     dateModified: String
 });
 
 module.exports = function (msg) {
-    const img1 = new Image({
+    const img1 = new Photo({
         source: 'dummy_url',
         tags: ['seed', 'data'],
         dateModified: 'today'
     })
-    img1.save().then(() => console.log('Image saved!'));
+    img1.save().then(() => console.log('Photo saved!'));
     
-    const img2 = new Image({
+    const img2 = new Photo({
         source: 'photobucket',
         tags: ['seed', 'data'],
         dateModified: 'yesterday'
     })
-    img2.save().then(() => console.log('Image saved!'));
+    img2.save().then(() => console.log('Photo saved!'));
     
-    const img3 = new Image({
+    const img3 = new Photo({
         source: 'unsplash',
         tags: ['seed', 'data'],
         dateModified: 'tomorrow'
     })
-    img3.save().then(() => console.log('Image saved!'));
+    img3.save().then(() => console.log('Photo saved!'));
 
     console.log(msg);
 };
