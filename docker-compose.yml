@@ -2,19 +2,52 @@ version: "3"
 
 services:
   front-end:
+    container_name: frontend
     build:
       context: ./front-end
       dockerfile: Dockerfile
+    volumes:
+      - ./front-end/src:/usr/app/src
+      - ./front-end/public:/usr/app/public
     ports:
       - target: 3000
         published: 3000
+    environment:
+      - BACKEND_LINK=http://localhost:3001
   
   back-end:
+    container_name: backend
     build:
       context: ./back-end
       dockerfile: Dockerfile
     ports:
       - target: 3001
         published: 3001
+    volumes:
+      - ./server/src:/usr/app/src
+    networks:
+      - server-side
+    depends_on:
+      - database
+    environment:
+      - DB_LINK=mongodb://database:27017
+      - FRONTEND_LINK=http://localhost:3000
   
-  # database: # (?)
+  database:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - target: 27017
+        published: 27017
+    networks:
+      - server-side
+    volumes:
+      - db_container:/data/db
+
+networks:
+  server-side:
+    driver: bridge
+
+volumes:
+  db_container:
+    driver: local
