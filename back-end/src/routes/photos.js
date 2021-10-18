@@ -22,4 +22,19 @@ router.patch('/', (request, response) => {
     response.send(request.body)
 });
 
+router.put('/', (req, res) => {
+    response.send(req.body)
+});
+
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const foundPhoto = await Photo.find({_id: id});
+        res.json(foundPhoto);
+    } catch (err) {
+        res.json( {message: err} );
+    }
+});
+
 module.exports = router;
