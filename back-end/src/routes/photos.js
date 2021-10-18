@@ -1,5 +1,6 @@
 const { response } = require('express');
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 const Photo = require('../models/Photo');
@@ -15,6 +16,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', (request, response) => {
     const photo = new Photo({
+        id: uuidv4(),
         source: request.body.source,
         tags: request.body.tags
     });
