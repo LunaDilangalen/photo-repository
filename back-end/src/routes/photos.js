@@ -1,9 +1,15 @@
 const express = require('express');
-
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send('');
+const Photo = require('../models/Photo');
+
+router.get('/', async (req, res) => {
+    try {
+        const photos = await Photo.find({}, {_id: 0, __v: 0});
+        res.json(photos);
+    } catch (err) {
+        res.json( {message: err} );
+    }
 });
 
 router.post('/', (request, response) => {

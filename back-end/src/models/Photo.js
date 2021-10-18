@@ -11,6 +11,7 @@ const PhotoSchema = mongoose.Schema({
     },
     dateModified: {
         type: Date,
+        default: Date.now(),
         required:true
     }
 });
