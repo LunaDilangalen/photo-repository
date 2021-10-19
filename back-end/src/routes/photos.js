@@ -96,34 +96,32 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', upload.single('sourceimage'), (request, response) => {
-    console.log(request.file);
-    console.log(process.env.AWS_ACCESS_KEY_ID);
-    console.log(process.env.AWS_BUCKET_NAME);
+router.post('/', upload.single('sourceimage'), (req, res) => {
+    console.log(req.file);
 
     const params = {
         Bucket:process.env.AWS_BUCKET_NAME,
-        Key:request.file.originalname,
-        Body:request.file.buffer,
+        Key:req.file.originalname,
+        Body:req.file.buffer,
         ACL:"public-read-write", 
         ContentType:"image/jpeg"    
     };
 
     s3.upload(params,(error, data)=>{
         if(error){
-            response.status(500).send({ "err": error })  
+            res.status(500).send({ "err": error })  
         }
 
     // TODO: FORM VALIDATION
     const photo = new Photo({
         id: uuidv4(),
         source: data.Location,
-        tags: request.body.tags
+        tags: req.body.tags
     });
 
     photo.save()
         .then(result => {
-            response.status(200).send({
+            res.status(200).send({
                 id: result.id,
                 source: data.Location,
                 tags: result.tags,
@@ -131,7 +129,7 @@ router.post('/', upload.single('sourceimage'), (request, response) => {
             })
         })
         .catch(err => {
-            response.send({ message: err });
+            res.send({ message: err });
         });
     });
 });
