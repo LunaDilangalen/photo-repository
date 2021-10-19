@@ -30,19 +30,19 @@ router.post('/', (request, response) => {
         });
 });
 
-router.patch('/', (request, response) => {
-    response.send(request.body)
-});
-
-router.put('/', (req, res) => {
-    response.send(req.body)
+router.patch('/:id', async (req, res) => {
+    try {
+        const updatedPost = await Photo.updateOne(
+            {_id: req.params.id}, { $set: {...req.body, dateModified: Date.now() } } );
+        res.json(updatedPost);
+    } catch (err) {
+        res.json( {message: err} );
+    }
 });
 
 router.get('/:id', async (req, res) => {
-    const { id } = req.params;
-
     try {
-        const foundPhoto = await Photo.find({_id: id});
+        const foundPhoto = await Photo.find({_id: req.params.id}, {_id: 0, __v: 0});
         res.json(foundPhoto);
     } catch (err) {
         res.json( {message: err} );
