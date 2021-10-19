@@ -28,7 +28,7 @@ module.exports = function (msg) {
     const img3 = new Photo({
         id: uuidv4(),
         source: 'unsplash',
-        tags: ['seed', 'data'],
+        tags: ['seed'],
         dateModified: Date.now()
     });
     img3.save().then(() => console.log('Photo saved!'));
