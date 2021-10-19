@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+// trying manual deployment
+require(dotenv/config);
+
 // Define Express App
 const App = express();
 

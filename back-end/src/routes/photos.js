@@ -4,6 +4,8 @@ const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const validator = require('validator');
 
+require(dotenv/config);
+
 // for uploading files to S3
 const multer = require('multer');
 const AWS = require('aws-sdk');
@@ -27,10 +29,12 @@ const filefilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: filefilter });
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET
-})
+// const s3 = new AWS.S3({
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//     secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET
+// })
+
+const s3 = new AWS.S3()
 
 router.get('/', async (req, res) => {
     try {
@@ -96,15 +100,19 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// TODO: FORM VALIDATION
 router.post('/', upload.single('sourceimage'), (req, res) => {
     console.log(req.file);
 
+    uniqueID = uuidv4();
+
     const params = {
-        Bucket:process.env.AWS_BUCKET_NAME,
-        Key:req.file.originalname,
-        Body:req.file.buffer,
-        ACL:"public-read-write", 
-        ContentType:"image/jpeg"    
+        Bucket: process.env.S3_BUCKET_NAME,
+        // Key:req.file.originalname,
+        Key: uniqueID,
+        Body: req.file.buffer,
+        ACL: "public-read-write", 
+        ContentType: "image/jpeg"    
     };
 
     s3.upload(params,(error, data)=>{
@@ -112,7 +120,6 @@ router.post('/', upload.single('sourceimage'), (req, res) => {
             res.status(500).send({ "err": error })  
         }
 
-    // TODO: FORM VALIDATION
     const photo = new Photo({
         id: uuidv4(),
         source: data.Location,
