@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
 
 router.get('/findByTag', async (req, res) => {
     const queryTags = req.body.tags;
-    const validQuery = cleanTags(queryTags);
+    const validQuery = checkTags(queryTags);
 
     if (validQuery) {
         queryTags.forEach((x, idx, queryTags) => {
