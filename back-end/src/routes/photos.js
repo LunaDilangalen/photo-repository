@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/findByTag', async (req, res) => {
+router.get('/findByTag', async (req, res) => {
     const queryTags = req.body.tags;
 
     console.log(queryTags);
@@ -34,7 +34,7 @@ router.get('/findByProductId', async (req, res) => {
     try {
         const productPhotos = await Photo.find( {productId: queryProductId}, 
                                 {_id: 0, __v: 0} );
-        res.json(taggedPhotos);
+        res.json(productPhotos);
     } catch (err) {
         res.json( {message: err} ); 
     }
