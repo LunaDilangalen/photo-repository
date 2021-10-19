@@ -24,7 +24,7 @@ services:
       - target: 3001
         published: 3001
     volumes:
-      - ./server/src:/usr/app/src
+      - ./back-end/src:/usr/app/src
     networks:
       - server-side
     depends_on:

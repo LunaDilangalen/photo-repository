@@ -14,17 +14,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
-    try {
-        const foundPhoto = await Photo.find({_id: req.params.id}, {_id: 0, __v: 0});
-        res.json(foundPhoto);
-    } catch (err) {
-        res.json( {message: err} );
-    }
-});
-
-router.get('/findByTag', async (req, res) => {
+router.post('/findByTag', async (req, res) => {
     const queryTags = req.body.tags;
+
+    console.log(queryTags);
 
     try {
         const taggedPhotos = await Photo.find( {tags: {'$in' : queryTags}}, 
@@ -47,19 +40,28 @@ router.get('/findByProductId', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const foundPhoto = await Photo.find({_id: req.params.id}, {_id: 0, __v: 0});
+        res.json(foundPhoto);
+    } catch (err) {
+        res.json( {message: err} );
+    }
+});
+
 router.post('/', (req, res) => {
     const photo = new Photo({
         id: uuidv4(),
-        source: request.body.source,
-        tags: request.body.tags
+        source: req.body.source,
+        tags: req.body.tags
     });
 
     photo.save()
         .then(data => {
-            response.json(data);
+            res.json(data);
         })
         .catch(err => {
-            response.json({ message: err });
+            res.json({ message: err });
         });
 });
 
