@@ -1,5 +1,6 @@
 const { response } = require('express');
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 const Photo = require('../models/Photo');
@@ -14,8 +15,19 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', (request, response) => {
-    console.log(request.body)
-    response.send(request.body)
+    const photo = new Photo({
+        id: uuidv4(),
+        source: request.body.source,
+        tags: request.body.tags
+    });
+
+    photo.save()
+        .then(data => {
+            response.json(data);
+        })
+        .catch(err => {
+            response.json({ message: err });
+        });
 });
 
 router.patch('/', (request, response) => {
