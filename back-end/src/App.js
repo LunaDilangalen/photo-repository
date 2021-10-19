@@ -31,8 +31,20 @@ async function main() {
     // Comment out if no need to seed.
     seed_db('Seeding database.');
 
-    App.get('/', (req, res) => {
-        res.send('Welcome to the Photo Repository Service API. :)');
+    App.get('/', (req, res, next) => {
+        res.status(403).send('You shall not pass.');
+    });
+
+    App.use((req, res, next) => {
+        res.status(404).send('Not found.');
+    });
+
+    App.use((err, req, res, next) => {
+        if (err instanceof SyntaxError) {
+            res.status(400).send('Malformed request.');
+        } else {
+            res.status(500).send('Internal server error.');
+        }
     });
 
     App.listen(port, () => {
