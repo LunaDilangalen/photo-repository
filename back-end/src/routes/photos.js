@@ -2,38 +2,60 @@ const { response } = require('express');
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
+const validator = require('validator');
 
 const Photo = require('../models/Photo');
+const checkTags = require('../util/clean-tags');
 
 router.get('/', async (req, res) => {
     try {
         const photos = await Photo.find( {}, {_id: 0, __v: 0} );
+        res.status(200);
         res.json(photos);
     } catch (err) {
+        res.status(500);
         res.json( {message: err} );
     }
 });
 
 router.get('/findByTag', async (req, res) => {
     const queryTags = req.body.tags;
+    const validQuery = cleanTags(queryTags);
 
-    console.log(queryTags);
+    if (validQuery) {
+        queryTags.forEach((x, idx, queryTags) => {
+            queryTags[idx] = validator.trim(queryTags[idx]);
+            queryTags[idx] = queryTags[idx].toLowerCase();
+            // queryTags[idx] = validator.escape(queryTags[idx]);
+        });
 
-    try {
-        const taggedPhotos = await Photo.find( {tags: {'$in' : queryTags}}, 
-                                {_id: 0, __v: 0} );
-        res.json(taggedPhotos);
-    } catch (err) {
-        res.json( {message: err} ); 
+        try {
+            console.log(queryTags);
+    
+            const taggedPhotos = await Photo.find( {tags: {'$in' : queryTags}}, 
+                                    {_id: 0, __v: 0} );
+            res.status(200);
+            res.json(taggedPhotos);
+        } catch (err) {
+            res.status(500);
+            res.json( {message: err} );
+        }; 
+    } else {
+        res.status(400).send('Bad request.');
     }
 });
 
 router.get('/findByProductId', async (req, res) => {
     const queryProductId = req.body.productId;
 
+    if (!queryProductId) {
+        res.status(400).send('Bad request.');
+    }
+
     try {
         const productPhotos = await Photo.find( {productId: queryProductId}, 
                                 {_id: 0, __v: 0} );
+        res.status(200);
         res.json(productPhotos);
     } catch (err) {
         res.json( {message: err} ); 
@@ -75,13 +97,27 @@ router.patch('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:photoId', async (req, res) => {
-    try {
-        const removedPhoto = await Photo.remove( {_id: req.params.photoId} );
-        res.json(removedPhoto);
-    } catch (err) {
-        res.json( {message: err} );
+router.delete('/:photoId', async (req, res, next) => {
+    const queryId = req.params.photoId;
+
+    if (validator.isUUID(queryId, 4)) {
+        try {
+            const removedPhoto = await Photo.remove( {_id: req.params.photoId} );
+            res.json(removedPhoto);
+        } catch (err) {
+            res.json( {message: err} );
+        }
+    } else {
+        next();
     }
 });
+
+router.use(async (req, res, next) => {
+    res.status(404).send({
+        status: 404,
+        error: 'Not found'
+    });
+});
+
 
 module.exports = router;
