@@ -32,6 +32,7 @@ services:
     environment:
       - DB_LINK=mongodb://database:27017
       - FRONTEND_LINK=http://localhost:3000
+      - S3_BUCKET_NAME=photo-repository-bucket
   
   database:
     image: mongo:latest

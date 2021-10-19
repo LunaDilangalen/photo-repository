@@ -4,8 +4,6 @@ const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const validator = require('validator');
 
-require(dotenv/config);
-
 // for uploading files to S3
 const multer = require('multer');
 const AWS = require('aws-sdk');
@@ -34,6 +32,7 @@ const upload = multer({ storage: storage, fileFilter: filefilter });
 //     secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET
 // })
 
+// trying manual deployment
 const s3 = new AWS.S3()
 
 router.get('/', async (req, res) => {
